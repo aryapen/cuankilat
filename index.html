@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CuanGoPay - Live Smartlink Anti-Cheat</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #171e31;
+            --primary: #00a651; /* Hijau GoPay */
+            --text-main: #ffffff;
+            --text-sub: #94a3b8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0; padding: 15px;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .app-container {
+            width: 100%; max-width: 400px;
+            background: linear-gradient(145deg, #131b2e, #1e293b);
+            border-radius: 24px; padding: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            box-sizing: border-box; border: 1px solid #2e3b56;
+        }
+
+        .app-title { font-size: 22px; font-weight: 800; color: var(--primary); margin-bottom: 20px; }
+
+        .wallet-card {
+            background: linear-gradient(135deg, #00a651, #008641);
+            padding: 20px; border-radius: 18px; margin-bottom: 25px;
+            box-shadow: 0 10px 20px rgba(0, 166, 81, 0.3);
+        }
+
+        .wallet-label { font-size: 13px; color: #e2f7eb; text-transform: uppercase; margin: 0; }
+        .wallet-balance { font-size: 34px; font-weight: 700; margin: 8px 0; }
+
+        .limit-info {
+            font-size: 11px;
+            color: #e2f7eb;
+            background: rgba(0, 0, 0, 0.15);
+            padding: 6px 10px;
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+
+        .section-title {
+            font-size: 15px; font-weight: 700; color: var(--text-sub);
+            text-transform: uppercase; margin: 20px 0 12px 0; text-align: left;
+            width: 100%;
+        }
+
+        .task-card {
+            background: var(--card-bg); border: 1px solid #242f4d;
+            padding: 16px; border-radius: 16px;
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+        }
+
+        .task-details { text-align: left; }
+        .task-name { font-weight: 600; font-size: 15px; }
+        .task-reward { font-size: 14px; color: #4ade80; font-weight: 700; margin-top: 2px; }
+
+        .btn-play {
+            background: var(--primary); color: #fff; border: none;
+            padding: 10px 18px; font-weight: 700; border-radius: 10px; cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-play:disabled {
+            background: #1e293b; color: #64748b; border: 1px solid #334155; cursor: not-allowed;
+        }
+
+        .input-group { margin-top: 20px; text-align: left; width: 100%; }
+        .input-group label { font-size: 13px; color: var(--text-sub); display: block; margin-bottom: 8px; }
+        .input-group input {
+            width: 100%; padding: 12px; background: #171e31; border: 1px solid #2e3b56;
+            border-radius: 10px; color: #fff; font-size: 15px; box-sizing: border-box;
+        }
+
+        .btn-withdraw-main {
+            width: 100%; padding: 15px; background: linear-gradient(45deg, #00a651, #008641);
+            border: none; border-radius: 14px; color: #fff; font-size: 16px; font-weight: 700;
+            margin-top: 20px; cursor: pointer; box-shadow: 0 6px 20px rgba(0, 166, 81, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="app-title">🛵 CuanGoPay Live</div>
+
+        <div class="wallet-card">
+            <p class="wallet-label">Saldo GoPay Anda</p>
+            <div class="wallet-balance">Rp <span id="userBalance">0</span></div>
+            <div class="limit-info">
+                Batas Tarik Hari Ini: <span id="withdrawnToday">0</span> / 100.000
+            </div>
+        </div>
+
+        <div class="section-title">Misi Iklan Premium (Smartlink)</div>
+
+        <div class="task-card">
+            <div class="task-details">
+                <div class="task-name">Tonton Iklan Sponsor 1</div>
+                <div class="task-reward">+ Rp 25</div>
+            </div>
+            <button class="btn-play" onclick="bukaIklanSmartlink(25, this)">Mulai</button>
+        </div>
+
+        <div class="task-card">
+            <div class="task-details">
+                <div class="task-name">Tonton Iklan Sponsor 2</div>
+                <div class="task-reward">+ Rp 50</div>
+            </div>
+            <button class="btn-play" onclick="bukaIklanSmartlink(50, this)">Mulai</button>
+        </div>
+
+        <div class="section-title">Form Pencairan</div>
+        <div class="input-group">
+            <label>Nomor HP GoPay Tujuan:</label>
+            <input type="number" id="gopayNumber" placeholder="Contoh: 08123456xxx">
+        </div>
+
+        <button class="btn-withdraw-main" onclick="processWithdraw()">💸 TARIK KE GOPAY</button>
+    </div>
+
+    <script>
+        let balance = 0;
+        let dailyWithdrawn = 0;
+        
+        const MIN_WITHDRAW = 20000;  
+        const MAX_DAILY_LIMIT = 100000; 
+
+        const balanceEl = document.getElementById('userBalance');
+        const withdrawnTodayEl = document.getElementById('withdrawnToday');
+
+        // URL Smartlink milikmu
+        const MY_SMARTLINK = "https://www.effectivecpmnetwork.com/ayngf8vz5t?key=51a25922858954051a39ed91f6f6d95e";
+
+        // LOGIKA TIMER ANTI-CHEAT
+        function bukaIklanSmartlink(rewardAmount, buttonElement) {
+            // 1. Membuka tab iklan milikmu
+            window.open(MY_SMARTLINK, '_blank');
+
+            // 2. Kunci tombol sementara agar tidak bisa di-spam klik
+            buttonElement.disabled = true;
+            
+            let waktuTunggu = 15; // Set jeda waktu 15 detik wajib nonton
+            buttonElement.innerText = `Memvalidasi... (${waktuTunggu}s)`;
+
+            // 3. Sistem hitung mundur dimulai
+            let hitungMundur = setInterval(() => {
+                waktuTunggu--;
+                buttonElement.innerText = `Memvalidasi... (${waktuTunggu}s)`;
+
+                if (waktuTunggu <= 0) {
+                    clearInterval(hitungMundur);
+                    
+                    // 4. Ubah tombol menjadi tombol klaim saldo
+                    buttonElement.innerText = "Klaim Saldo 🎉";
+                    buttonElement.style.background = "#e5e7eb";
+                    buttonElement.style.color = "#000";
+                    buttonElement.disabled = false;
+                    
+                    // 5. Ubah logika klik tombol agar hanya menambah saldo saat diklik pasca timer selesai
+                    buttonElement.onclick = function() {
+                        balance += rewardAmount;
+                        balanceEl.innerText = balance;
+                        alert(`Sukses! Koin Rp ${rewardAmount} masuk ke saldo.`);
+                        
+                        // Kembalikan tombol ke setelan awal agar bisa dipakai lagi
+                        buttonElement.innerText = "Mulai";
+                        buttonElement.style.background = "var(--primary)";
+                        buttonElement.style.color = "#fff";
+                        buttonElement.onclick = function() { bukaIklanSmartlink(rewardAmount, this); };
+                    };
+                }
+            }, 1000);
+        }
+
+        // LOGIKA PENARIKAN (WITHDRAW)
+        function processWithdraw() {
+            const noGopay = document.getElementById('gopayNumber').value;
+            if (!noGopay) { alert("Masukkan nomor HP GoPay tujuan!"); return; }
+            
+            // Cek minimal penarikan Rp 20.000
+            if (balance < MIN_WITHDRAW) { 
+                alert(`Gagal! Batas minimal penarikan adalah Rp ${MIN_WITHDRAW.toLocaleString('id-ID')}.\nSaldo kamu saat ini: Rp ${balance.toLocaleString('id-ID')}`); 
+                return; 
+            }
+
+            // Cek maksimal harian Rp 100.000
+            if (dailyWithdrawn + balance > MAX_DAILY_LIMIT) {
+                const sisaKuota = MAX_DAILY_LIMIT - dailyWithdrawn;
+                alert(`Gagal! Batas harian penarikan adalah Rp ${MAX_DAILY_LIMIT.toLocaleString('id-ID')}.\nSisa kuota penarikanmu hari ini: Rp ${sisaKuota.toLocaleString('id-ID')}`);
+                return;
+            }
+
+            // Validasi sukses
+            alert(`Sukses!\nSaldo Rp ${balance.toLocaleString('id-ID')} sedang diproses ke nomor GoPay: ${noGopay}.`);
+            
+            dailyWithdrawn += balance;
+            withdrawnTodayEl.innerText = dailyWithdrawn.toLocaleString('id-ID');
+            
+            balance = 0;
+            balanceEl.innerText = balance;
+        }
+    </script>
+</body>
+</html>
