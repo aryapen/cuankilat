@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CuanGoPay - Anti AdBlock System</title>
+    <title>CuanWallet - Anti AdBlock System</title>
     
     <!-- SCRIPT IKLAN ADSTERRA (OTOMATIS POPUNDER FULL LAYAR) -->
     <script src="https://recallscarce.com/03/bb/ec/03bbec523dda08fd3f190c1773d348e4.js"></script>
@@ -12,7 +12,7 @@
         :root {
             --bg-color: #0b0f19;
             --card-bg: #171e31;
-            --primary: #00a651; /* Hijau GoPay */
+            --primary: #2563eb; /* Biru Wallet Modern */
             --text-main: #ffffff;
             --text-sub: #94a3b8;
         }
@@ -36,17 +36,17 @@
         .app-title { font-size: 22px; font-weight: 800; color: var(--primary); margin-bottom: 20px; }
 
         .wallet-card {
-            background: linear-gradient(135deg, #00a651, #008641);
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
             padding: 20px; border-radius: 18px; margin-bottom: 25px;
-            box-shadow: 0 10px 20px rgba(0, 166, 81, 0.3);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
         }
 
-        .wallet-label { font-size: 13px; color: #e2f7eb; text-transform: uppercase; margin: 0; }
+        .wallet-label { font-size: 13px; color: #e2e8f0; text-transform: uppercase; margin: 0; }
         .wallet-balance { font-size: 34px; font-weight: 700; margin: 8px 0; }
 
         .limit-info {
             font-size: 11px;
-            color: #e2f7eb;
+            color: #e2e8f0;
             background: rgba(0, 0, 0, 0.15);
             padding: 6px 10px;
             border-radius: 8px;
@@ -77,17 +77,21 @@
             background: #1e293b; color: #64748b; border: 1px solid #334155; cursor: not-allowed;
         }
 
-        .input-group { margin-top: 20px; text-align: left; width: 100%; }
+        .input-group { margin-top: 15px; text-align: left; width: 100%; }
         .input-group label { font-size: 13px; color: var(--text-sub); display: block; margin-bottom: 8px; }
-        .input-group input {
+        .input-group input, .input-group select {
             width: 100%; padding: 12px; background: #171e31; border: 1px solid #2e3b56;
             border-radius: 10px; color: #fff; font-size: 15px; box-sizing: border-box;
+            outline: none;
+        }
+        .input-group select option {
+            background: #171e31; color: #fff;
         }
 
         .btn-withdraw-main {
-            width: 100%; padding: 15px; background: linear-gradient(45deg, #00a651, #008641);
+            width: 100%; padding: 15px; background: linear-gradient(45deg, #2563eb, #1d4ed8);
             border: none; border-radius: 14px; color: #fff; font-size: 16px; font-weight: 700;
-            margin-top: 20px; cursor: pointer; box-shadow: 0 6px 20px rgba(0, 166, 81, 0.3);
+            margin-top: 25px; cursor: pointer; box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
         }
 
         /* STYLE POP-UP ANTI ADBLOCK */
@@ -125,10 +129,10 @@
     </div>
 
     <div class="app-container">
-        <div class="app-title">🛵 CuanGoPay Live</div>
+        <div class="app-title">📱 CuanWallet Live</div>
 
         <div class="wallet-card">
-            <p class="wallet-label">Saldo GoPay Anda</p>
+            <p class="wallet-label">Total Saldo Anda</p>
             <div class="wallet-balance">Rp <span id="userBalance">0</span></div>
             <div class="limit-info">
                 Batas Tarik Hari Ini: <span id="withdrawnToday">0</span> / 100.000
@@ -154,17 +158,30 @@
         </div>
 
         <div class="section-title">Form Pencairan</div>
+        
+        <!-- Dropdown Pilihan E-Wallet Semua Opsi -->
         <div class="input-group">
-            <label>Nomor HP GoPay Tujuan:</label>
-            <input type="number" id="gopayNumber" placeholder="Contoh: 08123456xxx">
+            <label>Pilih E-Wallet Tujuan:</label>
+            <select id="walletType">
+                <option value="DANA">DANA</option>
+                <option value="GoPay">GoPay</option>
+                <option value="OVO">OVO</option>
+                <option value="LinkAja">LinkAja</option>
+                <option value="ShopeePay">ShopeePay</option>
+            </select>
         </div>
 
-        <button class="btn-withdraw-main" onclick="processWithdraw()">💸 TARIK KE GOPAY</button>
+        <div class="input-group">
+            <label>Nomor HP E-Wallet:</label>
+            <input type="number" id="walletNumber" placeholder="Contoh: 08123456xxx">
+        </div>
+
+        <button class="btn-withdraw-main" onclick="processWithdraw()">💸 TARIK SALDO CUAN</button>
     </div>
 
     <script>
-        let balance = 0;
-        let dailyWithdrawn = 0;
+        let balance = parseInt(localStorage.getItem('cuan_balance')) || 0;
+        let dailyWithdrawn = parseInt(localStorage.getItem('cuan_withdrawn')) || 0;
         
         const MIN_WITHDRAW = 20000;  
         const MAX_DAILY_LIMIT = 100000; 
@@ -172,7 +189,9 @@
         const balanceEl = document.getElementById('userBalance');
         const withdrawnTodayEl = document.getElementById('withdrawnToday');
 
-        // Menggunakan url script popunder untuk mendeteksi adblock
+        balanceEl.innerText = balance;
+        withdrawnTodayEl.innerText = dailyWithdrawn.toLocaleString('id-ID');
+
         const CHECK_LINK = "https://recallscarce.com/03/bb/ec/03bbec523dda08fd3f190c1773d348e4.js";
 
         function adBlockDetected() {
@@ -187,7 +206,6 @@
             }, 1000);
         });
 
-        // FUNGSI BARU KHUSUS POPUNDER
         function jalankanMisiPopunder(rewardAmount, buttonElement) {
             buttonElement.disabled = true;
             
@@ -208,7 +226,9 @@
                     
                     buttonElement.onclick = function() {
                         balance += rewardAmount;
+                        localStorage.setItem('cuan_balance', balance);
                         balanceEl.innerText = balance;
+                        
                         alert(`Sukses! Koin Rp ${rewardAmount} masuk ke saldo.`);
                         
                         buttonElement.innerText = "Mulai";
@@ -221,8 +241,10 @@
         }
 
         function processWithdraw() {
-            const noGopay = document.getElementById('gopayNumber').value;
-            if (!noGopay) { alert("Masukkan nomor HP GoPay tujuan!"); return; }
+            const eWallet = document.getElementById('walletType').value;
+            const noWallet = document.getElementById('walletNumber').value;
+            
+            if (!noWallet) { alert("Masukkan nomor HP E-Wallet tujuan!"); return; }
             
             if (balance < MIN_WITHDRAW) { 
                 alert(`Gagal! Batas minimal penarikan adalah Rp ${MIN_WITHDRAW.toLocaleString('id-ID')}.`); 
@@ -234,10 +256,16 @@
                 return;
             }
 
-            alert(`Sukses!\nSaldo Rp ${balance.toLocaleString('id-ID')} sedang diproses ke nomor GoPay: ${noGopay}.`);
+            // Notifikasi sukses menampilkan jenis e-wallet yang dipilih secara dinamis
+            alert(`Sukses!\nSaldo Rp ${balance.toLocaleString('id-ID')} sedang diproses ke akun ${eWallet}: ${noWallet}.`);
+            
             dailyWithdrawn += balance;
-            withdrawnTodayEl.innerText = dailyWithdrawn.toLocaleString('id-ID');
             balance = 0;
+
+            localStorage.setItem('cuan_balance', balance);
+            localStorage.setItem('cuan_withdrawn', dailyWithdrawn);
+
+            withdrawnTodayEl.innerText = dailyWithdrawn.toLocaleString('id-ID');
             balanceEl.innerText = balance;
         }
     </script>
