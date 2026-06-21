@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CuanWallet - Anti AdBlock System</title>
+    <title>CuanWallet - Multi AdSystem</title>
     
-    <!-- SCRIPT IKLAN ADSTERRA (OTOMATIS POPUNDER FULL LAYAR) -->
+    <!-- SCRIPT UTAMA ADSTERRA KAMU (SEMUA FORMAT YANG DICENTANG AKAN DIKONTROL OLEH SCRIPT INI) -->
     <script src="https://recallscarce.com/03/bb/ec/03bbec523dda08fd3f190c1773d348e4.js"></script>
 
     <style>
         :root {
             --bg-color: #0b0f19;
             --card-bg: #171e31;
-            --primary: #2563eb; /* Biru Wallet Modern */
+            --primary: #2563eb;
             --text-main: #ffffff;
             --text-sub: #94a3b8;
         }
@@ -22,6 +22,7 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0; padding: 15px;
+            padding-bottom: 100px; /* Jarak ekstra di bawah agar konten tidak tertutup iklan banner */
             display: flex; flex-direction: column; align-items: center;
         }
 
@@ -45,18 +46,13 @@
         .wallet-balance { font-size: 34px; font-weight: 700; margin: 8px 0; }
 
         .limit-info {
-            font-size: 11px;
-            color: #e2e8f0;
-            background: rgba(0, 0, 0, 0.15);
-            padding: 6px 10px;
-            border-radius: 8px;
-            margin-top: 5px;
+            font-size: 11px; color: #e2e8f0; background: rgba(0, 0, 0, 0.15);
+            padding: 6px 10px; border-radius: 8px; margin-top: 5px;
         }
 
         .section-title {
             font-size: 15px; font-weight: 700; color: var(--text-sub);
-            text-transform: uppercase; margin: 20px 0 12px 0; text-align: left;
-            width: 100%;
+            text-transform: uppercase; margin: 20px 0 12px 0; text-align: left; width: 100%;
         }
 
         .task-card {
@@ -81,11 +77,7 @@
         .input-group label { font-size: 13px; color: var(--text-sub); display: block; margin-bottom: 8px; }
         .input-group input, .input-group select {
             width: 100%; padding: 12px; background: #171e31; border: 1px solid #2e3b56;
-            border-radius: 10px; color: #fff; font-size: 15px; box-sizing: border-box;
-            outline: none;
-        }
-        .input-group select option {
-            background: #171e31; color: #fff;
+            border-radius: 10px; color: #fff; font-size: 15px; box-sizing: border-box; outline: none;
         }
 
         .btn-withdraw-main {
@@ -94,17 +86,21 @@
             margin-top: 25px; cursor: pointer; box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
         }
 
-        /* STYLE POP-UP ANTI ADBLOCK */
+        /* AREA KHUSUS JIKA SCRIPT ADSTERRA INGIN MENAMPILKAN BANNER MELAYANG */
+        .banner-container-bottom {
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            display: flex; justify-content: center; z-index: 999;
+            background: transparent; padding-bottom: 5px;
+        }
+
         #adblock-overlay {
-            display: none;
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(11, 15, 25, 0.98); z-index: 9999;
-            flex-direction: column; align-items: center; justify-content: center;
-            padding: 20px; box-sizing: border-box; text-align: center;
+            flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;
         }
         .ab-box {
             background: #1e293b; border: 2px solid #ef4444; border-radius: 20px;
-            padding: 30px; max-width: 360px; box-shadow: 0 10px 30px rgba(239, 68, 68, 0.2);
+            padding: 30px; max-width: 360px; box-shadow: 0 10px 30px rgba(239, 68, 68, 0.2); text-align: center;
         }
         .ab-icon { font-size: 50px; color: #ef4444; margin-bottom: 15px; }
         .ab-title { font-size: 20px; font-weight: 800; margin-bottom: 10px; color: #fff; }
@@ -123,7 +119,7 @@
         <div class="ab-box">
             <div class="ab-icon">🛑</div>
             <div class="ab-title">AdBlock Terdeteksi!</div>
-            <div class="ab-desc">Aplikasi ini gratis karena didukung oleh iklan. Mohon matikan AdBlock / Brave Shields kamu lalu segarkan (refresh) halaman ini untuk melanjutkan mencari cuan.</div>
+            <div class="ab-desc">Mohon matikan AdBlock / Brave Shields kamu lalu segarkan halaman ini untuk melanjutkan mencari cuan.</div>
             <button class="ab-btn" onclick="window.location.reload()">SAYA SUDAH MATIKAN ADBLOCK</button>
         </div>
     </div>
@@ -139,27 +135,26 @@
             </div>
         </div>
 
-        <div class="section-title">Misi Iklan Premium (Popunder)</div>
+        <div class="section-title">Misi Pasif & Popunder</div>
 
         <div class="task-card">
             <div class="task-details">
-                <div class="task-name">Tonton Iklan Sponsor 1</div>
+                <div class="task-name">Misi Sponsor Premium 1</div>
                 <div class="task-reward">+ Rp 25</div>
             </div>
-            <button class="btn-play" onclick="jalankanMisiPopunder(25, this)">Mulai</button>
+            <button class="btn-play" onclick="jalankanMisi(25, this)">Mulai</button>
         </div>
 
         <div class="task-card">
             <div class="task-details">
-                <div class="task-name">Tonton Iklan Sponsor 2</div>
+                <div class="task-name">Misi Sponsor Premium 2</div>
                 <div class="task-reward">+ Rp 50</div>
             </div>
-            <button class="btn-play" onclick="jalankanMisiPopunder(50, this)">Mulai</button>
+            <button class="btn-play" onclick="jalankanMisi(50, this)">Mulai</button>
         </div>
 
         <div class="section-title">Form Pencairan</div>
         
-        <!-- Dropdown Pilihan E-Wallet Semua Opsi -->
         <div class="input-group">
             <label>Pilih E-Wallet Tujuan:</label>
             <select id="walletType">
@@ -178,6 +173,9 @@
 
         <button class="btn-withdraw-main" onclick="processWithdraw()">💸 TARIK SALDO CUAN</button>
     </div>
+
+    <!-- AREA BANNER BAWAH (Jika kode Adsterra mengembalikan format Banner/In-Page) -->
+    <div class="banner-container-bottom" id="bannerSpace"></div>
 
     <script>
         let balance = parseInt(localStorage.getItem('cuan_balance')) || 0;
@@ -206,9 +204,9 @@
             }, 1000);
         });
 
-        function jalankanMisiPopunder(rewardAmount, buttonElement) {
+        // KETIKA USER KLIK: Memicu event klik global agar Popunder murni Adsterra yang ada di script .js mendeteksi aktivitas dan langsung meledak keluar
+        function jalankanMisi(rewardAmount, buttonElement) {
             buttonElement.disabled = true;
-            
             let waktuTunggu = 15; 
             buttonElement.innerText = `Memvalidasi... (${waktuTunggu}s)`;
 
@@ -234,7 +232,7 @@
                         buttonElement.innerText = "Mulai";
                         buttonElement.style.background = "var(--primary)";
                         buttonElement.style.color = "#fff";
-                        buttonElement.onclick = function() { jalankanMisiPopunder(rewardAmount, this); };
+                        buttonElement.onclick = function() { jalankanMisi(rewardAmount, this); };
                     };
                 }
             }, 1000);
@@ -256,7 +254,6 @@
                 return;
             }
 
-            // Notifikasi sukses menampilkan jenis e-wallet yang dipilih secara dinamis
             alert(`Sukses!\nSaldo Rp ${balance.toLocaleString('id-ID')} sedang diproses ke akun ${eWallet}: ${noWallet}.`);
             
             dailyWithdrawn += balance;
