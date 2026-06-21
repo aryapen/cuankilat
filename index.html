@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CuanWallet - Multi AdSystem</title>
     
-    <!-- SCRIPT UTAMA ADSTERRA KAMU (SEMUA FORMAT YANG DICENTANG AKAN DIKONTROL OLEH SCRIPT INI) -->
     <script src="https://recallscarce.com/03/bb/ec/03bbec523dda08fd3f190c1773d348e4.js"></script>
 
     <style>
@@ -22,7 +21,6 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0; padding: 15px;
-            padding-bottom: 100px; /* Jarak ekstra di bawah agar konten tidak tertutup iklan banner */
             display: flex; flex-direction: column; align-items: center;
         }
 
@@ -32,13 +30,14 @@
             border-radius: 24px; padding: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
             box-sizing: border-box; border: 1px solid #2e3b56;
+            text-align: center;
         }
 
         .app-title { font-size: 22px; font-weight: 800; color: var(--primary); margin-bottom: 20px; }
 
         .wallet-card {
             background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            padding: 20px; border-radius: 18px; margin-bottom: 25px;
+            padding: 20px; border-radius: 18px; margin-bottom: 20px;
             box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
         }
 
@@ -48,6 +47,15 @@
         .limit-info {
             font-size: 11px; color: #e2e8f0; background: rgba(0, 0, 0, 0.15);
             padding: 6px 10px; border-radius: 8px; margin-top: 5px;
+        }
+
+        /* STYLE AREA UNTUK IKLAN */
+        .ad-slot-native {
+            width: 100%; margin: 15px 0; border-radius: 12px; overflow: hidden;
+        }
+        .ad-slot-banner {
+            width: 100%; max-width: 468px; margin: 25px 0 10px 0; 
+            display: flex; justify-content: center; overflow: hidden;
         }
 
         .section-title {
@@ -85,44 +93,9 @@
             border: none; border-radius: 14px; color: #fff; font-size: 16px; font-weight: 700;
             margin-top: 25px; cursor: pointer; box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
         }
-
-        /* AREA KHUSUS JIKA SCRIPT ADSTERRA INGIN MENAMPILKAN BANNER MELAYANG */
-        .banner-container-bottom {
-            position: fixed; bottom: 0; left: 0; width: 100%;
-            display: flex; justify-content: center; z-index: 999;
-            background: transparent; padding-bottom: 5px;
-        }
-
-        #adblock-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(11, 15, 25, 0.98); z-index: 9999;
-            flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;
-        }
-        .ab-box {
-            background: #1e293b; border: 2px solid #ef4444; border-radius: 20px;
-            padding: 30px; max-width: 360px; box-shadow: 0 10px 30px rgba(239, 68, 68, 0.2); text-align: center;
-        }
-        .ab-icon { font-size: 50px; color: #ef4444; margin-bottom: 15px; }
-        .ab-title { font-size: 20px; font-weight: 800; margin-bottom: 10px; color: #fff; }
-        .ab-desc { font-size: 14px; color: #94a3b8; line-height: 1.5; margin-bottom: 20px; }
-        .ab-btn {
-            background: #ef4444; color: #fff; border: none; padding: 12px 25px;
-            font-weight: 700; border-radius: 10px; cursor: pointer; width: 100%;
-        }
     </style>
-
-    <script src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" onerror="adBlockDetected()" async></script>
 </head>
 <body>
-
-    <div id="adblock-overlay">
-        <div class="ab-box">
-            <div class="ab-icon">🛑</div>
-            <div class="ab-title">AdBlock Terdeteksi!</div>
-            <div class="ab-desc">Mohon matikan AdBlock / Brave Shields kamu lalu segarkan halaman ini untuk melanjutkan mencari cuan.</div>
-            <button class="ab-btn" onclick="window.location.reload()">SAYA SUDAH MATIKAN ADBLOCK</button>
-        </div>
-    </div>
 
     <div class="app-container">
         <div class="app-title">📱 CuanWallet Live</div>
@@ -135,11 +108,16 @@
             </div>
         </div>
 
-        <div class="section-title">Misi Pasif & Popunder</div>
+        <div class="ad-slot-native">
+            <script async="async" data-cfasync="false" src="https://recallscarce.com/ec075d98e4fc625c650d285616cbecdc/invoke.js"></script>
+            <div id="container-ec075d98e4fc625c650d285616cbecdc"></div>
+        </div>
+
+        <div class="section-title">Misi Iklan Premium</div>
 
         <div class="task-card">
             <div class="task-details">
-                <div class="task-name">Misi Sponsor Premium 1</div>
+                <div class="task-name">Tonton Iklan Sponsor 1</div>
                 <div class="task-reward">+ Rp 25</div>
             </div>
             <button class="btn-play" onclick="jalankanMisi(25, this)">Mulai</button>
@@ -147,7 +125,7 @@
 
         <div class="task-card">
             <div class="task-details">
-                <div class="task-name">Misi Sponsor Premium 2</div>
+                <div class="task-name">Tonton Iklan Sponsor 2</div>
                 <div class="task-reward">+ Rp 50</div>
             </div>
             <button class="btn-play" onclick="jalankanMisi(50, this)">Mulai</button>
@@ -172,10 +150,21 @@
         </div>
 
         <button class="btn-withdraw-main" onclick="processWithdraw()">💸 TARIK SALDO CUAN</button>
-    </div>
 
-    <!-- AREA BANNER BAWAH (Jika kode Adsterra mengembalikan format Banner/In-Page) -->
-    <div class="banner-container-bottom" id="bannerSpace"></div>
+        <div class="ad-slot-banner">
+            <script>
+              atOptions = {
+                'key' : '58d95ca21f65a9e0e77987ce3c0aa9f2',
+                'format' : 'iframe',
+                'height' : 60,
+                'width' : 468,
+                'params' : {}
+              };
+            </script>
+            <script src="https://recallscarce.com/58d95ca21f65a9e0e77987ce3c0aa9f2/invoke.js"></script>
+        </div>
+
+    </div>
 
     <script>
         let balance = parseInt(localStorage.getItem('cuan_balance')) || 0;
@@ -190,21 +179,6 @@
         balanceEl.innerText = balance;
         withdrawnTodayEl.innerText = dailyWithdrawn.toLocaleString('id-ID');
 
-        const CHECK_LINK = "https://recallscarce.com/03/bb/ec/03bbec523dda08fd3f190c1773d348e4.js";
-
-        function adBlockDetected() {
-            document.getElementById('adblock-overlay').style.display = 'flex';
-        }
-
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                fetch(CHECK_LINK, { mode: 'no-cors' }).catch(() => {
-                    adBlockDetected();
-                });
-            }, 1000);
-        });
-
-        // KETIKA USER KLIK: Memicu event klik global agar Popunder murni Adsterra yang ada di script .js mendeteksi aktivitas dan langsung meledak keluar
         function jalankanMisi(rewardAmount, buttonElement) {
             buttonElement.disabled = true;
             let waktuTunggu = 15; 
@@ -243,25 +217,15 @@
             const noWallet = document.getElementById('walletNumber').value;
             
             if (!noWallet) { alert("Masukkan nomor HP E-Wallet tujuan!"); return; }
-            
-            if (balance < MIN_WITHDRAW) { 
-                alert(`Gagal! Batas minimal penarikan adalah Rp ${MIN_WITHDRAW.toLocaleString('id-ID')}.`); 
-                return; 
-            }
-
-            if (dailyWithdrawn + balance > MAX_DAILY_LIMIT) {
-                alert(`Gagal! Batas harian penarikan terlampaui.`);
-                return;
-            }
+            if (balance < MIN_WITHDRAW) { alert(`Gagal! Batas minimal penarikan adalah Rp ${MIN_WITHDRAW.toLocaleString('id-ID')}.`); return; }
+            if (dailyWithdrawn + balance > MAX_DAILY_LIMIT) { alert(`Gagal! Batas harian penarikan terlampaui.`); return; }
 
             alert(`Sukses!\nSaldo Rp ${balance.toLocaleString('id-ID')} sedang diproses ke akun ${eWallet}: ${noWallet}.`);
-            
             dailyWithdrawn += balance;
             balance = 0;
 
             localStorage.setItem('cuan_balance', balance);
             localStorage.setItem('cuan_withdrawn', dailyWithdrawn);
-
             withdrawnTodayEl.innerText = dailyWithdrawn.toLocaleString('id-ID');
             balanceEl.innerText = balance;
         }
