@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CuanGoPay - Anti AdBlock System</title>
+    
+    <!-- SCRIPT IKLAN ADSTERRA (OTOMATIS POPUNDER / SOCIAL BAR FULL LAYAR) -->
+    <script src="https://recallscarce.com/03/bb/ec/03bbec523dda08fd3f190c1773d348e4.js"></script>
+
     <style>
         :root {
             --bg-color: #0b0f19;
@@ -86,9 +90,9 @@
             margin-top: 20px; cursor: pointer; box-shadow: 0 6px 20px rgba(0, 166, 81, 0.3);
         }
 
-        /* STYLE UNTUK POP-UP ANTI ADBLOCK (MEMBLOKIR LAYAR) */
+        /* STYLE UNTUK POP-UP ANTI ADBLOCK */
         #adblock-overlay {
-            display: none; /* Default tersembunyi, muncul jika adblock aktif */
+            display: none;
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(11, 15, 25, 0.98); z-index: 9999;
             flex-direction: column; align-items: center; justify-content: center;
@@ -138,7 +142,7 @@
                 <div class="task-name">Tonton Iklan Sponsor 1</div>
                 <div class="task-reward">+ Rp 25</div>
             </div>
-            <button class="btn-play" onclick="bukaIklanSmartlink(25, this)">Mulai</button>
+            <button class="btn-play" onclick="jalankanMisiIklan(25, this)">Mulai</button>
         </div>
 
         <div class="task-card">
@@ -146,7 +150,7 @@
                 <div class="task-name">Tonton Iklan Sponsor 2</div>
                 <div class="task-reward">+ Rp 50</div>
             </div>
-            <button class="btn-play" onclick="bukaIklanSmartlink(50, this)">Mulai</button>
+            <button class="btn-play" onclick="jalankanMisiIklan(50, this)">Mulai</button>
         </div>
 
         <div class="section-title">Form Pencairan</div>
@@ -168,26 +172,23 @@
         const balanceEl = document.getElementById('userBalance');
         const withdrawnTodayEl = document.getElementById('withdrawnToday');
 
-        const MY_SMARTLINK = "https://www.effectivecpmnetwork.com/ayngf8vz5t?key=51a25922858954051a39ed91f6f6d95e";
+        // Link script Adsterra kamu untuk validasi sistem Anti-AdBlock
+        const CHECK_LINK = "https://recallscarce.com/03/bb/ec/03bbec523dda08fd3f190c1773d348e4.js";
 
-        // 1. FUNGSI JIKA ADBLOCK TERDETEKSI
         function adBlockDetected() {
             document.getElementById('adblock-overlay').style.display = 'flex';
         }
 
-        // BACKUP CEK CADANGAN: Jika script Google di atas lolos tapi di-block lokal
         window.addEventListener('load', () => {
-            // Kita cek apakah iklan monetag/adsterra bisa dipanggil, jika gagal paksa kunci
             setTimeout(() => {
-                // Memeriksa apakah link iklan utama di-block secara lokal oleh browser eksternal
-                fetch(MY_SMARTLINK, { mode: 'no-cors' }).catch(() => {
+                fetch(CHECK_LINK, { mode: 'no-cors' }).catch(() => {
                     adBlockDetected();
                 });
             }, 1000);
         });
 
-        function bukaIklanSmartlink(rewardAmount, buttonElement) {
-            window.open(MY_SMARTLINK, '_blank');
+        // FUNGSI UTAMA UNTUK MISI IKLAN
+        function jalankanMisiIklan(rewardAmount, buttonElement) {
             buttonElement.disabled = true;
             
             let waktuTunggu = 15; 
@@ -213,7 +214,7 @@
                         buttonElement.innerText = "Mulai";
                         buttonElement.style.background = "var(--primary)";
                         buttonElement.style.color = "#fff";
-                        buttonElement.onclick = function() { bukaIklanSmartlink(rewardAmount, this); };
+                        buttonElement.onclick = function() { jalankanMisiIklan(rewardAmount, this); };
                     };
                 }
             }, 1000);
