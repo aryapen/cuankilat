@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CuanGoPay - Anti AdBlock System</title>
     
-    <!-- SCRIPT IKLAN ADSTERRA (OTOMATIS POPUNDER / SOCIAL BAR FULL LAYAR) -->
+    <!-- SCRIPT IKLAN ADSTERRA (OTOMATIS POPUNDER FULL LAYAR) -->
     <script src="https://recallscarce.com/03/bb/ec/03bbec523dda08fd3f190c1773d348e4.js"></script>
 
     <style>
@@ -90,7 +90,7 @@
             margin-top: 20px; cursor: pointer; box-shadow: 0 6px 20px rgba(0, 166, 81, 0.3);
         }
 
-        /* STYLE UNTUK POP-UP ANTI ADBLOCK */
+        /* STYLE POP-UP ANTI ADBLOCK */
         #adblock-overlay {
             display: none;
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -135,14 +135,14 @@
             </div>
         </div>
 
-        <div class="section-title">Misi Iklan Premium (Smartlink)</div>
+        <div class="section-title">Misi Iklan Premium (Popunder)</div>
 
         <div class="task-card">
             <div class="task-details">
                 <div class="task-name">Tonton Iklan Sponsor 1</div>
                 <div class="task-reward">+ Rp 25</div>
             </div>
-            <button class="btn-play" onclick="jalankanMisiIklan(25, this)">Mulai</button>
+            <button class="btn-play" onclick="jalankanMisiPopunder(25, this)">Mulai</button>
         </div>
 
         <div class="task-card">
@@ -150,7 +150,7 @@
                 <div class="task-name">Tonton Iklan Sponsor 2</div>
                 <div class="task-reward">+ Rp 50</div>
             </div>
-            <button class="btn-play" onclick="jalankanMisiIklan(50, this)">Mulai</button>
+            <button class="btn-play" onclick="jalankanMisiPopunder(50, this)">Mulai</button>
         </div>
 
         <div class="section-title">Form Pencairan</div>
@@ -172,7 +172,7 @@
         const balanceEl = document.getElementById('userBalance');
         const withdrawnTodayEl = document.getElementById('withdrawnToday');
 
-        // Link script Adsterra kamu untuk validasi sistem Anti-AdBlock
+        // Menggunakan url script popunder untuk mendeteksi adblock
         const CHECK_LINK = "https://recallscarce.com/03/bb/ec/03bbec523dda08fd3f190c1773d348e4.js";
 
         function adBlockDetected() {
@@ -187,8 +187,8 @@
             }, 1000);
         });
 
-        // FUNGSI UTAMA UNTUK MISI IKLAN
-        function jalankanMisiIklan(rewardAmount, buttonElement) {
+        // FUNGSI BARU KHUSUS POPUNDER
+        function jalankanMisiPopunder(rewardAmount, buttonElement) {
             buttonElement.disabled = true;
             
             let waktuTunggu = 15; 
@@ -214,7 +214,7 @@
                         buttonElement.innerText = "Mulai";
                         buttonElement.style.background = "var(--primary)";
                         buttonElement.style.color = "#fff";
-                        buttonElement.onclick = function() { jalankanMisiIklan(rewardAmount, this); };
+                        buttonElement.onclick = function() { jalankanMisiPopunder(rewardAmount, this); };
                     };
                 }
             }, 1000);
