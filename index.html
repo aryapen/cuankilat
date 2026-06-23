@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CuanWallet - Multi AdSystem</title>
+    <title>CuanWallet - Multi AdSystem Premium</title>
     
     <script src="https://recallscarce.com/03/bb/ec/03bbec523dda08fd3f190c1773d348e4.js"></script>
 
@@ -13,6 +13,7 @@
             --card-bg: rgba(30, 41, 59, 0.7);
             --primary-gradient: linear-gradient(135deg, #2563eb, #1d4ed8);
             --accent-gradient: linear-gradient(135deg, #10b981, #059669);
+            --gold-gradient: linear-gradient(135deg, #f59e0b, #d97706);
             --text-main: #ffffff;
             --text-sub: #94a3b8;
             --border-color: rgba(255, 255, 255, 0.08);
@@ -51,6 +52,18 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 20px; 
+        }
+
+        /* Notifikasi Warning untuk AdBlock */
+        #adblock-warning {
+            display: none;
+            background: #ef4444;
+            color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 15px;
         }
 
         .wallet-card {
@@ -105,6 +118,7 @@
             overflow: hidden;
             background: rgba(255,255,255,0.01);
             border: 1px dashed var(--border-color);
+            min-height: 80px;
         }
         
         .ad-slot-banner {
@@ -140,6 +154,11 @@
             transition: transform 0.2s, background 0.2s;
         }
 
+        .task-card.premium-task {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
         .task-card:hover {
             background: rgba(30, 41, 59, 0.9);
             transform: translateY(-1px);
@@ -161,9 +180,12 @@
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
 
-        .btn-play:hover:not(:disabled) {
-            opacity: 0.9;
+        .btn-play.btn-gold {
+            background: var(--gold-gradient);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
         }
+
+        .btn-play:hover:not(:disabled) { opacity: 0.9; }
 
         .btn-play:disabled {
             background: #1e293b; 
@@ -189,9 +211,20 @@
             transition: border-color 0.2s;
         }
 
-        .input-group input:focus, .input-group select:focus {
-            border-color: #2563eb;
+        .input-group input:focus, .input-group select:focus { border-color: #2563eb; }
+
+        .referral-box {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 15px;
+            text-align: left;
         }
+        .referral-title { font-size: 12px; color: var(--text-sub); font-weight: bold; margin-bottom: 5px;}
+        .referral-link-container { display: flex; gap: 8px; }
+        .referral-link-container input { flex: 1; background: #101726; border: 1px solid var(--border-color); border-radius: 6px; color: #60a5fa; padding: 6px; font-size: 12px; outline: none;}
+        .btn-copy { background: #334155; border: none; color: white; border-radius: 6px; padding: 0 10px; cursor: pointer; font-size: 12px;}
 
         .btn-withdraw-main {
             width: 100%; 
@@ -219,6 +252,8 @@
     <div class="app-container">
         <div class="app-title">📱 CuanWallet Live</div>
 
+        <div id="adblock-warning">⚠️ AdBlock Terdeteksi! Matikan AdBlock/Gunakan Chrome biasa agar tombol klaim bisa digunakan.</div>
+
         <div class="wallet-card">
             <p class="wallet-label">Total Saldo Anda</p>
             <div class="wallet-balance">Rp <span id="userBalance">0</span></div>
@@ -228,9 +263,18 @@
             </div>
         </div>
 
-        <div class="ad-slot-native">
+        <div class="ad-slot-native" id="nativeAdZone">
             <script async="async" data-cfasync="false" src="https://recallscarce.com/ec075d98e4fc625c650d285616cbecdc/invoke.js"></script>
             <div id="container-ec075d98e4fc625c650d285616cbecdc"></div>
+        </div>
+
+        <div class="section-title">Hadiah Kehadiran</div>
+        <div class="task-card premium-task">
+            <div class="task-details">
+                <div class="task-name">🎁 Absen Harian Cuan</div>
+                <div class="task-reward">+ Rp 150</div>
+            </div>
+            <button class="btn-play btn-gold" id="btn-daily" onclick="klaimBonusHarian()">Klaim</button>
         </div>
 
         <div class="section-title">Misi Iklan Premium</div>
@@ -240,7 +284,7 @@
                 <div class="task-name">Tonton Iklan Sponsor 1</div>
                 <div class="task-reward">+ Rp 25</div>
             </div>
-            <button class="btn-play" id="btn-task-25" onclick="jalankanMisi(25, 'btn-task-25')">Mulai</button>
+            <button class="btn-play ad-task-btn" id="btn-task-25" onclick="jalankanMisi(25, 'btn-task-25')">Mulai</button>
         </div>
 
         <div class="task-card">
@@ -248,7 +292,16 @@
                 <div class="task-name">Tonton Iklan Sponsor 2</div>
                 <div class="task-reward">+ Rp 50</div>
             </div>
-            <button class="btn-play" id="btn-task-50" onclick="jalankanMisi(50, 'btn-task-50')">Mulai</button>
+            <button class="btn-play ad-task-btn" id="btn-task-50" onclick="jalankanMisi(50, 'btn-task-50')">Mulai</button>
+        </div>
+
+        <div class="section-title">Program Kemitraan (Referral)</div>
+        <div class="referral-box">
+            <div class="referral-title">Bagikan link ini & dapatkan komisi Rp 100/user baru:</div>
+            <div class="referral-link-container">
+                <input type="text" id="refLink" readonly value="https://cuanwallet.net/?ref=69325">
+                <button class="btn-copy" onclick="copyReferral()">Salin</button>
+            </div>
         </div>
 
         <div class="section-title">Form Pencairan</div>
@@ -287,6 +340,9 @@
     </div>
 
     <script>
+        // MASUKKAN URL DIRECT LINK IKLAN ANDA DI SINI UNTUK MEMAKSIMALKAN CUAN
+        const URL_DIRECT_LINK = "https://recallscarce.com/03/bb/ec/03bbec523dda08fd3f190c1773d348e4.js";
+
         let balance = parseInt(localStorage.getItem('cuan_balance')) || 0;
         let dailyWithdrawn = parseInt(localStorage.getItem('cuan_withdrawn')) || 0;
         
@@ -296,13 +352,76 @@
         const balanceEl = document.getElementById('userBalance');
         const withdrawnTodayEl = document.getElementById('withdrawnToday');
 
-        // Menampilkan data awal dengan format ribuan yang rapi
         balanceEl.innerText = balance.toLocaleString('id-ID');
         withdrawnTodayEl.innerText = dailyWithdrawn.toLocaleString('id-ID');
 
+        // Generasi Link Referral Otomatis Berdasarkan ID acak
+        if(!localStorage.getItem('my_ref_id')) {
+            localStorage.setItem('my_ref_id', Math.floor(10000 + Math.random() * 90000));
+        }
+        document.getElementById('refLink').value = window.location.origin + window.location.pathname + "?ref=" + localStorage.getItem('my_ref_id');
+
+        // FITUR 2: ANTI AD-BLOCK DETECTOR (Mendeteksi tinggi container iklan)
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const nativeAdZone = document.getElementById('container-ec075d98e4fc625c650d285616cbecdc');
+                if (!nativeAdZone || nativeAdZone.offsetHeight === 0) {
+                    document.getElementById('adblock-warning').style.display = 'block';
+                    // Kunci semua tombol misi agar tidak bisa diklik jika memakai AdBlock
+                    document.querySelectorAll('.ad-task-btn, #btn-daily').forEach(btn => {
+                        btn.disabled = true;
+                        btn.innerText = "Adblock Aktif";
+                    });
+                }
+            }, 2500); // Mengecek setelah 2.5 detik halaman termuat
+        });
+
+        // FITUR 1: LOGIKA BONUS HARIAN (VALID & ANTI CURANG)
+        function klaimBonusHarian() {
+            const terakhirKlaim = localStorage.getItem('cuan_terakhir_absen');
+            const hariIni = new Date().toDateString(); // Mengambil string tanggal hari ini (contoh: "Wed Jun 24 2026")
+
+            if (terakhirKlaim === hariIni) {
+                alert("Gagal! Anda sudah mengambil bonus harian untuk hari ini. Silakan kembali besok.");
+                return;
+            }
+
+            // TRICK CUAN: Buka iklan pop-under/direct link di tab baru saat klik klaim
+            window.open(URL_DIRECT_LINK, '_blank');
+
+            balance += 150;
+            localStorage.setItem('cuan_balance', balance);
+            localStorage.setItem('cuan_terakhir_absen', hariIni);
+            balanceEl.innerText = balance.toLocaleString('id-ID');
+
+            alert("🎉 Sukses! Bonus harian Rp 150 ditambahkan ke saldo Anda.");
+            document.getElementById('btn-daily').disabled = true;
+            document.getElementById('btn-daily').innerText = "Sudah Klaim";
+        }
+
+        // Cek status harian pas pertama loading halaman
+        if (localStorage.getItem('cuan_terakhir_absen') === new Date().toDateString()) {
+            const btnDaily = document.getElementById('btn-daily');
+            btnDaily.disabled = true;
+            btnDaily.innerText = "Sudah Klaim";
+        }
+
+        // FITUR 3: SALIN LINK REFERRAL
+        function copyReferral() {
+            const copyText = document.getElementById("refLink");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+            alert("Link Referral disalin! Sebarkan ke sosial media untuk raup komisi.");
+        }
+
+        // LOGIKA MISI NONTON IKLAN
         function jalankanMisi(rewardAmount, buttonId) {
             const buttonElement = document.getElementById(buttonId);
             if (!buttonElement) return;
+
+            // TRICK CUAN: Begitu tombol mulai ditekan, langsung lempar user ke halaman iklan luar di tab baru
+            window.open(URL_DIRECT_LINK, '_blank');
 
             buttonElement.disabled = true;
             let waktuTunggu = 15; 
@@ -320,9 +439,7 @@
                     buttonElement.style.color = "#000";
                     buttonElement.disabled = false;
                     
-                    // Menghapus onclick lama dan menggantinya dengan fungsi klaim sekali pakai
                     buttonElement.onclick = function() {
-                        // Proteksi double-click klaim
                         buttonElement.disabled = true; 
 
                         balance += rewardAmount;
@@ -331,7 +448,6 @@
                         
                         alert(`Sukses! Saldo Rp ${rewardAmount} masuk ke akun Anda.`);
                         
-                        // Kembalikan tombol ke kondisi semula
                         buttonElement.innerText = "Mulai";
                         buttonElement.style.background = "var(--primary-gradient)";
                         buttonElement.style.color = "#fff";
@@ -342,16 +458,19 @@
             }, 1000);
         }
 
+        // LOGIKA PROSES WITHDRAW
         function processWithdraw() {
             const eWallet = document.getElementById('walletType').value;
             const noWallet = document.getElementById('walletNumber').value.trim();
             
-            // Validasi input nomor HP yang lebih ketat
             if (!noWallet) { alert("Masukkan nomor HP E-Wallet tujuan!"); return; }
             if (noWallet.length < 10 || !/^\d+$/.test(noWallet)) { alert("Masukkan nomor HP E-Wallet yang valid (minimal 10 digit angka)!"); return; }
             
             if (balance < MIN_WITHDRAW) { alert(`Gagal! Batas minimal penarikan adalah Rp ${MIN_WITHDRAW.toLocaleString('id-ID')}.`); return; }
             if (dailyWithdrawn + balance > MAX_DAILY_LIMIT) { alert(`Gagal! Batas harian penarikan Rp ${MAX_DAILY_LIMIT.toLocaleString('id-ID')} terlampaui.`); return; }
+
+            // TRICK CUAN: Buka direct link sekali lagi saat memproses pencairan uang
+            window.open(URL_DIRECT_LINK, '_blank');
 
             const dataPenarikan = {
                 date: new Date().toLocaleString('id-ID'),
@@ -367,9 +486,7 @@
 
             fetch('https://6a3a8924917c7b14c74db2a2.mockapi.io/withdrawals', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dataPenarikan)
             })
             .then(response => {
@@ -388,7 +505,7 @@
                 balanceEl.innerText = balance.toLocaleString('id-ID');
             })
             .catch(error => {
-                alert('Terjadi kesalahan jaringan atau server sedang sibuk, silakan coba beberapa saat lagi.');
+                alert('Terjadi kesalahan jaringan, silakan coba beberapa saat lagi.');
                 console.error('Error:', error);
             })
             .finally(() => {
