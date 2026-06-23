@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CuanWallet - Multi AdSystem</title>
     
-    <!-- Script Iklan Utama Bawaan (Tidak Diubah) -->
     <script src="https://recallscarce.com/03/bb/ec/03bbec523dda08fd3f190c1773d348e4.js"></script>
 
     <style>
@@ -99,7 +98,6 @@
             justify-content: space-between;
         }
 
-        /* STYLE AREA UNTUK IKLAN */
         .ad-slot-native {
             width: 100%; 
             margin: 15px 0; 
@@ -242,7 +240,7 @@
                 <div class="task-name">Tonton Iklan Sponsor 1</div>
                 <div class="task-reward">+ Rp 25</div>
             </div>
-            <button class="btn-play" onclick="jalankanMisi(25, this)">Mulai</button>
+            <button class="btn-play" id="btn-task-25" onclick="jalankanMisi(25, 'btn-task-25')">Mulai</button>
         </div>
 
         <div class="task-card">
@@ -250,7 +248,7 @@
                 <div class="task-name">Tonton Iklan Sponsor 2</div>
                 <div class="task-reward">+ Rp 50</div>
             </div>
-            <button class="btn-play" onclick="jalankanMisi(50, this)">Mulai</button>
+            <button class="btn-play" id="btn-task-50" onclick="jalankanMisi(50, 'btn-task-50')">Mulai</button>
         </div>
 
         <div class="section-title">Form Pencairan</div>
@@ -268,7 +266,7 @@
 
         <div class="input-group">
             <label>Nomor HP E-Wallet:</label>
-            <input type="number" id="walletNumber" placeholder="Contoh: 08123456xxx">
+            <input type="text" id="walletNumber" inputmode="numeric" pattern="[0-9]*" placeholder="Contoh: 08123456xxx">
         </div>
 
         <button class="btn-withdraw-main" onclick="processWithdraw()">💸 TARIK SALDO CUAN</button>
@@ -288,7 +286,6 @@
 
     </div>
 
-    <!-- Script Utama Terintegrasi ke Mock API Anda (Fitur & Logika Utuh Sempurna) -->
     <script>
         let balance = parseInt(localStorage.getItem('cuan_balance')) || 0;
         let dailyWithdrawn = parseInt(localStorage.getItem('cuan_withdrawn')) || 0;
@@ -299,10 +296,14 @@
         const balanceEl = document.getElementById('userBalance');
         const withdrawnTodayEl = document.getElementById('withdrawnToday');
 
-        balanceEl.innerText = balance;
+        // Menampilkan data awal dengan format ribuan yang rapi
+        balanceEl.innerText = balance.toLocaleString('id-ID');
         withdrawnTodayEl.innerText = dailyWithdrawn.toLocaleString('id-ID');
 
-        function jalankanMisi(rewardAmount, buttonElement) {
+        function jalankanMisi(rewardAmount, buttonId) {
+            const buttonElement = document.getElementById(buttonId);
+            if (!buttonElement) return;
+
             buttonElement.disabled = true;
             let waktuTunggu = 15; 
             buttonElement.innerText = `Memvalidasi... (${waktuTunggu}s)`;
@@ -319,17 +320,23 @@
                     buttonElement.style.color = "#000";
                     buttonElement.disabled = false;
                     
+                    // Menghapus onclick lama dan menggantinya dengan fungsi klaim sekali pakai
                     buttonElement.onclick = function() {
+                        // Proteksi double-click klaim
+                        buttonElement.disabled = true; 
+
                         balance += rewardAmount;
                         localStorage.setItem('cuan_balance', balance);
-                        balanceEl.innerText = balance;
+                        balanceEl.innerText = balance.toLocaleString('id-ID');
                         
-                        alert(`Sukses! Koin Rp ${rewardAmount} masuk ke saldo.`);
+                        alert(`Sukses! Saldo Rp ${rewardAmount} masuk ke akun Anda.`);
                         
+                        // Kembalikan tombol ke kondisi semula
                         buttonElement.innerText = "Mulai";
                         buttonElement.style.background = "var(--primary-gradient)";
                         buttonElement.style.color = "#fff";
-                        buttonElement.onclick = function() { jalankanMisi(rewardAmount, this); };
+                        buttonElement.disabled = false;
+                        buttonElement.onclick = function() { jalankanMisi(rewardAmount, buttonId); };
                     };
                 }
             }, 1000);
@@ -337,11 +344,14 @@
 
         function processWithdraw() {
             const eWallet = document.getElementById('walletType').value;
-            const noWallet = document.getElementById('walletNumber').value;
+            const noWallet = document.getElementById('walletNumber').value.trim();
             
+            // Validasi input nomor HP yang lebih ketat
             if (!noWallet) { alert("Masukkan nomor HP E-Wallet tujuan!"); return; }
+            if (noWallet.length < 10 || !/^\d+$/.test(noWallet)) { alert("Masukkan nomor HP E-Wallet yang valid (minimal 10 digit angka)!"); return; }
+            
             if (balance < MIN_WITHDRAW) { alert(`Gagal! Batas minimal penarikan adalah Rp ${MIN_WITHDRAW.toLocaleString('id-ID')}.`); return; }
-            if (dailyWithdrawn + balance > MAX_DAILY_LIMIT) { alert(`Gagal! Batas harian penarikan terlampaui.`); return; }
+            if (dailyWithdrawn + balance > MAX_DAILY_LIMIT) { alert(`Gagal! Batas harian penarikan Rp ${MAX_DAILY_LIMIT.toLocaleString('id-ID')} terlampaui.`); return; }
 
             const dataPenarikan = {
                 date: new Date().toLocaleString('id-ID'),
@@ -355,7 +365,6 @@
             btnWD.disabled = true;
             btnWD.innerText = "⏳ MEMPROSES...";
 
-            // Mengirim data ke URL Mock API Anda
             fetch('https://6a3a8924917c7b14c74db2a2.mockapi.io/withdrawals', {
                 method: 'POST',
                 headers: {
@@ -364,9 +373,7 @@
                 body: JSON.stringify(dataPenarikan)
             })
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Gagal terhubung ke server Mock API');
-                }
+                if (!response.ok) throw new Error('Gagal terhubung ke server Mock API');
                 return response.json();
             })
             .then(data => {
@@ -376,11 +383,12 @@
 
                 localStorage.setItem('cuan_balance', balance);
                 localStorage.setItem('cuan_withdrawn', dailyWithdrawn);
+                
                 withdrawnTodayEl.innerText = dailyWithdrawn.toLocaleString('id-ID');
-                balanceEl.innerText = balance;
+                balanceEl.innerText = balance.toLocaleString('id-ID');
             })
             .catch(error => {
-                alert('Terjadi kesalahan jaringan, silakan coba beberapa saat lagi.');
+                alert('Terjadi kesalahan jaringan atau server sedang sibuk, silakan coba beberapa saat lagi.');
                 console.error('Error:', error);
             })
             .finally(() => {
