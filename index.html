@@ -5,68 +5,146 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CuanWallet - Multi AdSystem</title>
     
+    <!-- Script Iklan Utama Bawaan (Tidak Diubah) -->
     <script src="https://recallscarce.com/03/bb/ec/03bbec523dda08fd3f190c1773d348e4.js"></script>
 
     <style>
         :root {
-            --bg-color: #0b0f19;
-            --card-bg: #171e31;
-            --primary: #2563eb;
+            --bg-color: #080c14;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --primary-gradient: linear-gradient(135deg, #2563eb, #1d4ed8);
+            --accent-gradient: linear-gradient(135deg, #10b981, #059669);
             --text-main: #ffffff;
             --text-sub: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.08);
         }
 
         body {
             font-family: 'Segoe UI', Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            margin: 0; padding: 15px;
-            display: flex; flex-direction: column; align-items: center;
+            margin: 0; 
+            padding: 15px;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at top right, rgba(37, 99, 235, 0.1), transparent 400px);
         }
 
         .app-container {
-            width: 100%; max-width: 400px;
-            background: linear-gradient(145deg, #131b2e, #1e293b);
-            border-radius: 24px; padding: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            box-sizing: border-box; border: 1px solid #2e3b56;
+            width: 100%; 
+            max-width: 400px;
+            background: rgba(19, 27, 46, 0.9);
+            backdrop-filter: blur(12px);
+            border-radius: 24px; 
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            box-sizing: border-box; 
+            border: 1px solid var(--border-color);
             text-align: center;
         }
 
-        .app-title { font-size: 22px; font-weight: 800; color: var(--primary); margin-bottom: 20px; }
-
-        .wallet-card {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            padding: 20px; border-radius: 18px; margin-bottom: 20px;
-            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+        .app-title { 
+            font-size: 22px; 
+            font-weight: 800; 
+            background: linear-gradient(to right, #60a5fa, #2563eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px; 
         }
 
-        .wallet-label { font-size: 13px; color: #e2e8f0; text-transform: uppercase; margin: 0; }
-        .wallet-balance { font-size: 34px; font-weight: 700; margin: 8px 0; }
+        .wallet-card {
+            background: var(--primary-gradient);
+            padding: 20px; 
+            border-radius: 18px; 
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
+        }
+
+        .wallet-card::before {
+            content: '';
+            position: absolute;
+            top: -30px; right: -30px;
+            width: 100px; height: 100px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 30px;
+            transform: rotate(45deg);
+        }
+
+        .wallet-label { 
+            font-size: 13px; 
+            color: #e2e8f0; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            margin: 0; 
+        }
+        
+        .wallet-balance { 
+            font-size: 34px; 
+            font-weight: 700; 
+            margin: 8px 0; 
+        }
 
         .limit-info {
-            font-size: 11px; color: #e2e8f0; background: rgba(0, 0, 0, 0.15);
-            padding: 6px 10px; border-radius: 8px; margin-top: 5px;
+            font-size: 11px; 
+            color: #e2e8f0; 
+            background: rgba(0, 0, 0, 0.2);
+            padding: 6px 10px; 
+            border-radius: 8px; 
+            margin-top: 5px;
+            display: flex;
+            justify-content: space-between;
         }
 
         /* STYLE AREA UNTUK IKLAN */
         .ad-slot-native {
-            width: 100%; margin: 15px 0; border-radius: 12px; overflow: hidden;
+            width: 100%; 
+            margin: 15px 0; 
+            border-radius: 12px; 
+            overflow: hidden;
+            background: rgba(255,255,255,0.01);
+            border: 1px dashed var(--border-color);
         }
+        
         .ad-slot-banner {
-            width: 100%; max-width: 468px; margin: 25px 0 10px 0; 
-            display: flex; justify-content: center; overflow: hidden;
+            width: 100%; 
+            max-width: 468px; 
+            margin: 25px 0 10px 0; 
+            display: flex; 
+            justify-content: center; 
+            overflow: hidden;
+            border-radius: 10px;
         }
 
         .section-title {
-            font-size: 15px; font-weight: 700; color: var(--text-sub);
-            text-transform: uppercase; margin: 20px 0 12px 0; text-align: left; width: 100%;
+            font-size: 14px; 
+            font-weight: 700; 
+            color: var(--text-sub);
+            text-transform: uppercase; 
+            margin: 20px 0 12px 0; 
+            text-align: left; 
+            width: 100%;
+            letter-spacing: 0.5px;
         }
 
         .task-card {
-            background: var(--card-bg); border: 1px solid #242f4d;
-            padding: 16px; border-radius: 16px;
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+            background: var(--card-bg); 
+            border: 1px solid var(--border-color);
+            padding: 16px; 
+            border-radius: 16px;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 12px;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .task-card:hover {
+            background: rgba(30, 41, 59, 0.9);
+            transform: translateY(-1px);
         }
 
         .task-details { text-align: left; }
@@ -74,24 +152,67 @@
         .task-reward { font-size: 14px; color: #4ade80; font-weight: 700; margin-top: 2px; }
 
         .btn-play {
-            background: var(--primary); color: #fff; border: none;
-            padding: 10px 18px; font-weight: 700; border-radius: 10px; cursor: pointer;
+            background: var(--primary-gradient); 
+            color: #fff; 
+            border: none;
+            padding: 10px 18px; 
+            font-weight: 700; 
+            border-radius: 10px; 
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
+
+        .btn-play:hover:not(:disabled) {
+            opacity: 0.9;
+        }
+
         .btn-play:disabled {
-            background: #1e293b; color: #64748b; border: 1px solid #334155; cursor: not-allowed;
+            background: #1e293b; 
+            color: #64748b; 
+            border: 1px solid #334155; 
+            cursor: not-allowed;
+            box-shadow: none;
         }
 
         .input-group { margin-top: 15px; text-align: left; width: 100%; }
         .input-group label { font-size: 13px; color: var(--text-sub); display: block; margin-bottom: 8px; }
+        
         .input-group input, .input-group select {
-            width: 100%; padding: 12px; background: #171e31; border: 1px solid #2e3b56;
-            border-radius: 10px; color: #fff; font-size: 15px; box-sizing: border-box; outline: none;
+            width: 100%; 
+            padding: 12px; 
+            background: #101726; 
+            border: 1px solid var(--border-color);
+            border-radius: 10px; 
+            color: #fff; 
+            font-size: 15px; 
+            box-sizing: border-box; 
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: #2563eb;
         }
 
         .btn-withdraw-main {
-            width: 100%; padding: 15px; background: linear-gradient(45deg, #2563eb, #1d4ed8);
-            border: none; border-radius: 14px; color: #fff; font-size: 16px; font-weight: 700;
-            margin-top: 25px; cursor: pointer; box-shadow: 0 6px 20px rgba(37, 99, 235, 0.3);
+            width: 100%; 
+            padding: 15px; 
+            background: var(--accent-gradient);
+            border: none; 
+            border-radius: 14px; 
+            color: #fff; 
+            font-size: 16px; 
+            font-weight: 700;
+            margin-top: 25px; 
+            cursor: pointer; 
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+            transition: all 0.2s;
+        }
+
+        .btn-withdraw-main:hover {
+            opacity: 0.95;
+            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
         }
     </style>
 </head>
@@ -104,7 +225,8 @@
             <p class="wallet-label">Total Saldo Anda</p>
             <div class="wallet-balance">Rp <span id="userBalance">0</span></div>
             <div class="limit-info">
-                Batas Tarik Hari Ini: <span id="withdrawnToday">0</span> / 100.000
+                <span>Batas Tarik Hari Ini:</span>
+                <span><span id="withdrawnToday">0</span> / 100.000</span>
             </div>
         </div>
 
@@ -166,6 +288,7 @@
 
     </div>
 
+    <!-- Script Utama Terintegrasi ke Mock API Anda (Fitur & Logika Utuh Sempurna) -->
     <script>
         let balance = parseInt(localStorage.getItem('cuan_balance')) || 0;
         let dailyWithdrawn = parseInt(localStorage.getItem('cuan_withdrawn')) || 0;
@@ -204,7 +327,7 @@
                         alert(`Sukses! Koin Rp ${rewardAmount} masuk ke saldo.`);
                         
                         buttonElement.innerText = "Mulai";
-                        buttonElement.style.background = "var(--primary)";
+                        buttonElement.style.background = "var(--primary-gradient)";
                         buttonElement.style.color = "#fff";
                         buttonElement.onclick = function() { jalankanMisi(rewardAmount, this); };
                     };
@@ -220,14 +343,50 @@
             if (balance < MIN_WITHDRAW) { alert(`Gagal! Batas minimal penarikan adalah Rp ${MIN_WITHDRAW.toLocaleString('id-ID')}.`); return; }
             if (dailyWithdrawn + balance > MAX_DAILY_LIMIT) { alert(`Gagal! Batas harian penarikan terlampaui.`); return; }
 
-            alert(`Sukses!\nSaldo Rp ${balance.toLocaleString('id-ID')} sedang diproses ke akun ${eWallet}: ${noWallet}.`);
-            dailyWithdrawn += balance;
-            balance = 0;
+            const dataPenarikan = {
+                date: new Date().toLocaleString('id-ID'),
+                wallet: eWallet,
+                number: noWallet,
+                amount: balance,
+                status: 'Pending'
+            };
 
-            localStorage.setItem('cuan_balance', balance);
-            localStorage.setItem('cuan_withdrawn', dailyWithdrawn);
-            withdrawnTodayEl.innerText = dailyWithdrawn.toLocaleString('id-ID');
-            balanceEl.innerText = balance;
+            const btnWD = document.querySelector('.btn-withdraw-main');
+            btnWD.disabled = true;
+            btnWD.innerText = "⏳ MEMPROSES...";
+
+            // Mengirim data ke URL Mock API Anda
+            fetch('https://6a3a8924917c7b14c74db2a2.mockapi.io/withdrawals', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dataPenarikan)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Gagal terhubung ke server Mock API');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(`Sukses!\nSaldo Rp ${balance.toLocaleString('id-ID')} sedang diproses ke akun ${eWallet}: ${noWallet}.`);
+                dailyWithdrawn += balance;
+                balance = 0;
+
+                localStorage.setItem('cuan_balance', balance);
+                localStorage.setItem('cuan_withdrawn', dailyWithdrawn);
+                withdrawnTodayEl.innerText = dailyWithdrawn.toLocaleString('id-ID');
+                balanceEl.innerText = balance;
+            })
+            .catch(error => {
+                alert('Terjadi kesalahan jaringan, silakan coba beberapa saat lagi.');
+                console.error('Error:', error);
+            })
+            .finally(() => {
+                btnWD.disabled = false;
+                btnWD.innerText = "💸 TARIK SALDO CUAN";
+            });
         }
     </script>
 </body>
