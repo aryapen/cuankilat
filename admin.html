@@ -48,12 +48,15 @@
         
         label { display: block; font-size: 12px; color: var(--text-sub); margin-bottom: 6px; }
         
-        input, select {
+        input, textarea, select {
             width: 100%; padding: 12px; background: #0a0f1d;
             border: 1px solid var(--border-color); border-radius: 10px;
             color: #fff; box-sizing: border-box; outline: none; font-size: 14px;
+            font-family: inherit;
         }
-        input:focus { border-color: #ec4899; }
+        input:focus, textarea:focus { border-color: #ec4899; }
+
+        textarea { resize: vertical; min-height: 60px; }
 
         .btn-action {
             width: 100%; padding: 12px;
@@ -110,22 +113,22 @@
         <button class="btn-action" onclick="saveCuanKilatConfig()">💾 Simpan Pengaturan Kilat</button>
 
 
-        <!-- SECTION 2: INPUT VIDEO DOODSTREAM -->
-        <div class="section-title" style="margin-top: 25px;">🎬 Pengaturan Video DoodStream</div>
+        <!-- SECTION 2: INPUT VIDEO (MENDUKUNG IFRAME & KODE BIASA) -->
+        <div class="section-title" style="margin-top: 25px;">🎬 Pengaturan Video Player</div>
 
         <div class="input-group">
             <label>Judul Video (Gunakan kalimat Clickbait):</label>
-            <input type="text" id="vidTitle" placeholder="Contoh: Video Bocah Viral TikTok Terbaru">
+            <input type="text" id="vidTitle" placeholder="Contoh: Video Viral TikTok Terbaru Full">
         </div>
 
         <div class="input-group">
-            <label>Kode File DoodStream:</label>
-            <input type="text" id="vidCode" placeholder="Contoh: w72ja8slxpoq">
+            <label>Kode File, Link Bersih, atau Kode Iframe:</label>
+            <textarea id="vidCode" placeholder="Tempel kode <iframe>...</iframe> atau link player di sini"></textarea>
         </div>
 
         <div class="input-group">
             <label>Ukuran File (Opsional):</label>
-            <input type="text" id="vidSize" value="15.0 MB">
+            <input type="text" id="vidSize" value="12.0 MB">
         </div>
 
         <button class="btn-action" style="background: linear-gradient(135deg, #2563eb, #1d4ed8);" onclick="addVideo()">➕ Tambahkan Video</button>
@@ -135,13 +138,13 @@
             <!-- Item video dimuat di sini -->
         </div>
 
-        <a href="index.html" class="footer-link">👁️ Buka Halaman Depan Aplikasi</a>
+        <a href="nonton.html" class="footer-link">👁️ Buka Halaman Nonton Video</a>
+        <a href="index.html" class="footer-link" style="margin-top: 5px;">💰 Buka Halaman Utama Dompet</a>
     </div>
 
     <script>
         // --- LOGIK CONFIG CUAN KILAT ---
         function loadCuanKilatConfig() {
-            // Ambil data lama atau gunakan default value jika kosong
             const currentReward = localStorage.getItem('kilat_reward') || '5000';
             const currentMax = localStorage.getItem('kilat_max_claims') || '3';
 
@@ -182,7 +185,7 @@
                 row.innerHTML = `
                     <div style="max-width: 75%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                         <strong>${video.title}</strong><br>
-                        <span style="color:#94a3b8; font-size:11px;">Kode: ${video.code} (${video.size})</span>
+                        <span style="color:#94a3b8; font-size:11px;">Src: ${video.code}</span>
                     </div>
                     <button class="btn-delete" onclick="deleteVideo(${index})">Hapus</button>
                 `;
@@ -192,23 +195,34 @@
 
         function addVideo() {
             const title = document.getElementById('vidTitle').value.trim();
-            const code = document.getElementById('vidCode').value.trim();
+            let inputCode = document.getElementById('vidCode').value.trim();
             const size = document.getElementById('vidSize').value.trim();
 
-            if (!title || !code) {
-                alert('Judul dan Kode Video DoodStream wajib diisi!');
+            if (!title || !inputCode) {
+                alert('Judul dan Isian Kode/Iframe Video wajib diisi!');
                 return;
             }
 
+            // EKSTRAKSI OTOMATIS: Jika yang ditempel adalah teks iframe utuh
+            if (inputCode.includes('<iframe')) {
+                const match = inputCode.match(/src=["']([^"']+)["']/);
+                if (match && match[1]) {
+                    inputCode = match[1]; // Ganti teks iframe menjadi link bersih dari atribut src
+                } else {
+                    alert('Format kode iframe tidak valid atau tidak memiliki link src!');
+                    return;
+                }
+            }
+
             let videos = JSON.parse(localStorage.getItem('cuan_videos')) || [];
-            videos.push({ title: title, code: code, size: size });
+            videos.push({ title: title, code: inputCode, size: size });
             localStorage.setItem('cuan_videos', JSON.stringify(videos));
 
-            // Reset form input video
+            // Reset input form video
             document.getElementById('vidTitle').value = '';
             document.getElementById('vidCode').value = '';
 
-            alert('🎉 Video baru berhasil dimasukkan!');
+            alert('🎉 Video baru berhasil disimpan dan siap disebarkan!');
             loadActiveVideos();
         }
 
@@ -221,7 +235,7 @@
             }
         }
 
-        // Jalankan saat halaman dibuka pertama kali
+        // Jalankan saat pertama kali halaman terbuka
         window.onload = function() {
             loadCuanKilatConfig();
             loadActiveVideos();
