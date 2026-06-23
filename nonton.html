@@ -41,14 +41,7 @@
             font-size: 22px; font-weight: 800; 
             background: linear-gradient(to right, #60a5fa, #2563eb);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 20px; text-align: center;
-        }
-
-        .btn-nav {
-            display: inline-block; width: 100%; padding: 12px;
-            background: #1e293b; color: #fff; text-decoration: none;
-            border-radius: 12px; font-weight: bold; margin-bottom: 20px;
-            box-sizing: border-box; text-align: center; border: 1px solid var(--border-color);
+            margin-bottom: 25px; text-align: center;
         }
 
         #player-container {
@@ -74,7 +67,7 @@
 
         .ad-banner { width: 100%; margin-top: 25px; display: flex; justify-content: center; min-height: 60px; }
 
-        /* PANEL BLOKIR ADBLOCK (Sembunyi secara default) */
+        /* PANEL BLOKIR ADBLOCK */
         #adblock-screen {
             display: none; position: fixed; top: 0; left: 0; 
             width: 100%; height: 100%; background: #060a12;
@@ -105,9 +98,8 @@
 
     <div class="app-container" id="main-content">
         <div class="app-title">🎬 CuanVideo Player</div>
-        
-        <a href="index.html" class="btn-nav">⬅️ Kembali ke Dompet</a>
 
+        <!-- Tempat Video Diputar -->
         <div id="player-container">
             <iframe id="dood-player" src="" allowfullscreen="true" scrolling="no"></iframe>
         </div>
@@ -138,18 +130,14 @@
             const adblockScreen = document.getElementById('adblock-screen');
             const mainContent = document.getElementById('main-content');
 
-            // Cek 1: Apakah elemen indikator buatan diblokir/disembunyikan oleh ekstensi?
             const isBlocked = window.getComputedStyle(detector).getPropertyValue('display') === 'none' || detector.offsetHeight === 0;
-
-            // Cek 2: Apakah script pihak ketiga Adsterra gagal dimuat?
             const isScriptBlocked = typeof atOptions === 'undefined';
 
             if (isBlocked || isScriptBlocked) {
-                // Aktifkan layar blokir, sembunyikan konten utama
                 adblockScreen.style.display = 'flex';
                 mainContent.style.display = 'none';
                 if(document.getElementById('dood-player')) {
-                    document.getElementById('dood-player').src = ''; // Matikan player jika sempat jalan
+                    document.getElementById('dood-player').src = '';
                 }
             }
         }
@@ -182,26 +170,30 @@
             });
         }
 
-        function putarVideo(fileCode) {
-            // Cek Adblock sekali lagi sebelum memutar video demi keamanan ganda
-            checkAdBlock();
+        // --- SISTEM PLAY FLEXIBLE (MENDUKUNG LINK IFRAME EXTRACTED) ---
+        function putarVideo(videoUrl) {
+            checkAdBlock(); // Proteksi ganda
 
             const playerContainer = document.getElementById('player-container');
             const iframe = document.getElementById('dood-player');
             
-            iframe.src = `https://dood.li/e/${fileCode}`;
+            // Mengatur src iframe secara dinamis berdasarkan format data inputan admin
+            if (videoUrl.startsWith('http://') || videoUrl.startsWith('https://')) {
+                iframe.src = videoUrl;
+            } else {
+                iframe.src = `https://dood.li/e/${videoUrl}`;
+            }
+            
             playerContainer.style.display = 'block';
             
-            // TRICK CUAN: Buka iklan Direct Link Adsterra
+            // TRICK CUAN: Buka iklan Direct Link Adsterra di tab baru
             window.open("https://recallscarce.com/03/bb/ec/03bbec523dda08fd3f190c1773d348e4.js", "_blank");
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Jalankan pemeriksaan sesaat setelah seluruh element & script termuat
         window.onload = function() {
             tampilkanDaftarVideo();
-            // Beri delay sedikit 300ms agar script adblocker browser merespon duluan
             setTimeout(checkAdBlock, 300);
         };
     </script>
