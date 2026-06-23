@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CuanWallet - Nonton & Hasilkan</title>
     
-    <!-- Script Adsterra Tetap Dipasang Biar Cuan Dobel -->
+    <!-- Script Adsterra Utama -->
     <script src="https://recallscarce.com/03/bb/ec/03bbec523dda08fd3f190c1773d348e4.js"></script>
 
     <style>
@@ -49,11 +49,8 @@
             background: #1e293b; color: #fff; text-decoration: none;
             border-radius: 12px; font-weight: bold; margin-bottom: 20px;
             box-sizing: border-box; text-align: center; border: 1px solid var(--border-color);
-            transition: background 0.2s;
         }
-        .btn-nav:hover { background: #334155; }
 
-        /* Video Player Area */
         #player-container {
             display: none; width: 100%; margin-bottom: 20px;
             background: #000; border-radius: 14px; overflow: hidden;
@@ -68,105 +65,145 @@
             border-radius: 14px; padding: 10px; display: flex; gap: 12px;
             cursor: pointer; transition: transform 0.2s, background 0.2s; align-items: center;
         }
-        .video-card:hover { 
-            background: rgba(30, 41, 59, 0.9); 
-            transform: translateY(-1px);
-        }
+        .video-card:hover { background: rgba(30, 41, 59, 0.9); transform: translateY(-1px); }
         
-        .video-thumb {
-            width: 100px; height: 60px; background: #1e293b;
-            border-radius: 8px; object-fit: cover;
-        }
-        
+        .video-thumb { width: 100px; height: 60px; background: #1e293b; border-radius: 8px; object-fit: cover; }
         .video-info { text-align: left; flex: 1; }
         .video-title { font-size: 14px; font-weight: 600; color: #fff; line-height: 1.3; }
         .video-size { font-size: 11px; color: var(--text-sub); margin-top: 4px; }
 
-        .ad-banner { width: 100%; margin-top: 25px; display: flex; justify-content: center; }
+        .ad-banner { width: 100%; margin-top: 25px; display: flex; justify-content: center; min-height: 60px; }
+
+        /* PANEL BLOKIR ADBLOCK (Sembunyi secara default) */
+        #adblock-screen {
+            display: none; position: fixed; top: 0; left: 0; 
+            width: 100%; height: 100%; background: #060a12;
+            z-index: 99999; flex-direction: column; justify-content: center;
+            align-items: center; text-align: center; padding: 20px; box-sizing: border-box;
+        }
+        .ab-box { max-width: 340px; background: #131b2e; padding: 30px; border-radius: 20px; border: 1px solid #ef4444; }
+        .ab-icon { font-size: 50px; margin-bottom: 15px; }
+        .ab-title { font-size: 20px; font-weight: bold; color: #ef4444; margin-bottom: 10px; }
+        .ab-desc { font-size: 14px; color: #94a3b8; line-height: 1.5; margin-bottom: 20px; }
+        .ab-btn { display: block; padding: 12px; background: #ef4444; color: white; text-decoration: none; border-radius: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
+    <!-- LAYER PENGUNCI JIKA ADBLOCK AKTIF -->
+    <div id="adblock-screen">
+        <div class="ab-box">
+            <div class="ab-icon">🛑</div>
+            <div class="ab-title">AdBlock Terdeteksi!</div>
+            <div class="ab-desc">Aplikasi ini membutuhkan iklan agar tetap gratis. Harap matikan AdBlocker / Brave Shields Anda lalu muat ulang halaman untuk melanjutkan nonton.</div>
+            <a href="window.location.reload()" class="ab-btn" onclick="location.reload(); return false;">🔄 Saya Sudah Matikan</a>
+        </div>
+    </div>
+
+    <!-- ELEMEN INDIKATOR UNTUK CEK ADBLOCK -->
+    <div id="ad-detector" class="ad-banner adzone ads advertising" style="position: absolute; left: -9999px; width: 1px; height: 1px;"></div>
+
+    <div class="app-container" id="main-content">
         <div class="app-title">🎬 CuanVideo Player</div>
         
-        <!-- Navigasi balik ke halaman utama dompet Anda -->
         <a href="index.html" class="btn-nav">⬅️ Kembali ke Dompet</a>
 
-        <!-- Tempat Video Diputar -->
         <div id="player-container">
             <iframe id="dood-player" src="" allowfullscreen="true" scrolling="no"></iframe>
         </div>
 
-        <div style="font-size: 14px; color: var(--text-sub); text-align: left; margin-bottom: 12px; font-weight: bold; letter-spacing: 0.5px; text-transform: uppercase;">
+        <div style="font-size: 14px; color: var(--text-sub); text-align: left; margin-bottom: 12px; font-weight: bold; text-transform: uppercase;">
             Pilih Video untuk Ditonton:
         </div>
 
-        <!-- DAFTAR VIDEO MANUAL (Ganti tulisan KODE_VIDEO dengan kode dari DoodStream Anda) -->
-        <div class="video-list" id="listVideo">
-            
-            <!-- Video Slot 1 -->
-            <div class="video-card" onclick="putarVideo('KODE_VIDEO_1')">
-                <img class="video-thumb" src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=150" alt="thumb">
-                <div class="video-info">
-                    <div class="video-title">🔥 Video Bocah Viral Terbaru di TikTok 2026 Full Episode</div>
-                    <div class="video-size">Ukuran: 14.2 MB</div>
-                </div>
-            </div>
-
-            <!-- Video Slot 2 -->
-            <div class="video-card" onclick="putarVideo('KODE_VIDEO_2')">
-                <img class="video-thumb" src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=150" alt="thumb">
-                <div class="video-info">
-                    <div class="video-title">🎬 Film Aksi Bioskop Terlaris Paling Seru (Sub Indo)</div>
-                    <div class="video-size">Ukuran: 52.0 MB</div>
-                </div>
-            </div>
-
-            <!-- Video Slot 3 -->
-            <div class="video-card" onclick="putarVideo('KODE_VIDEO_3')">
-                <img class="video-thumb" src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=150" alt="thumb">
-                <div class="video-info">
-                    <div class="video-title">🌟 Anime Overpowered Episode Terbaru Minggu Ini</div>
-                    <div class="video-size">Ukuran: 38.7 MB</div>
-                </div>
-            </div>
-
-            <!-- Anda bisa menyalin blok <div class="video-card"> ... </div> di atas 
-                 sebanyak-banyaknya untuk menambah daftar video baru -->
-
+        <!-- DAFTAR VIDEO DINAMIS DARI PANEL ADMIN -->
+        <div class="video-list" id="listVideoContainer">
+            <p style="text-align: center; color: var(--text-sub);">Memuat list video...</p>
         </div>
 
         <!-- Iklan Adsterra Banner Bawah -->
         <div class="ad-banner">
+            <div id="container-58d95ca21f65a9e0e77987ce3c0aa9f2"></div>
             <script>
-              atOptions = {
-                'key' : '58d95ca21f65a9e0e77987ce3c0aa9f2',
-                'format' : 'iframe',
-                'height' : 60,
-                'width' : 468,
-                'params' : {}
-              };
+              atOptions = { 'key' : '58d95ca21f65a9e0e77987ce3c0aa9f2', 'format' : 'iframe', 'height' : 60, 'width' : 468, 'params' : {} };
             </script>
             <script src="https://recallscarce.com/58d95ca21f65a9e0e77987ce3c0aa9f2/invoke.js"></script>
         </div>
     </div>
 
     <script>
+        // --- LOGIC ANTI ADBLOCK ---
+        function checkAdBlock() {
+            const detector = document.getElementById('ad-detector');
+            const adblockScreen = document.getElementById('adblock-screen');
+            const mainContent = document.getElementById('main-content');
+
+            // Cek 1: Apakah elemen indikator buatan diblokir/disembunyikan oleh ekstensi?
+            const isBlocked = window.getComputedStyle(detector).getPropertyValue('display') === 'none' || detector.offsetHeight === 0;
+
+            // Cek 2: Apakah script pihak ketiga Adsterra gagal dimuat?
+            const isScriptBlocked = typeof atOptions === 'undefined';
+
+            if (isBlocked || isScriptBlocked) {
+                // Aktifkan layar blokir, sembunyikan konten utama
+                adblockScreen.style.display = 'flex';
+                mainContent.style.display = 'none';
+                if(document.getElementById('dood-player')) {
+                    document.getElementById('dood-player').src = ''; // Matikan player jika sempat jalan
+                }
+            }
+        }
+
+        // --- RENDER DAFTAR VIDEO DARI ADMIN ---
+        function tampilkanDaftarVideo() {
+            const container = document.getElementById('listVideoContainer');
+            let videos = JSON.parse(localStorage.getItem('cuan_videos')) || [];
+
+            if(videos.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#64748b; font-size:14px;">Belum ada video tersedia dari admin.</p>';
+                return;
+            }
+
+            container.innerHTML = ''; 
+
+            videos.forEach(video => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.onclick = () => putarVideo(video.code);
+
+                card.innerHTML = `
+                    <img class="video-thumb" src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=150" alt="thumb">
+                    <div class="video-info">
+                        <div class="video-title">${video.title}</div>
+                        <div class="video-size">Ukuran: ${video.size || '12 MB'}</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
         function putarVideo(fileCode) {
+            // Cek Adblock sekali lagi sebelum memutar video demi keamanan ganda
+            checkAdBlock();
+
             const playerContainer = document.getElementById('player-container');
             const iframe = document.getElementById('dood-player');
             
-            // Mengarahkan iframe ke url embed universal Doodstream yang stabil
             iframe.src = `https://dood.li/e/${fileCode}`;
             playerContainer.style.display = 'block';
             
-            // TRICK AGRESIF: Begitu user klik judul video, paksa buka Direct Link Adsterra di tab baru
+            // TRICK CUAN: Buka iklan Direct Link Adsterra
             window.open("https://recallscarce.com/03/bb/ec/03bbec523dda08fd3f190c1773d348e4.js", "_blank");
             
-            // Otomatis geser layar ke atas agar player langsung terlihat
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        // Jalankan pemeriksaan sesaat setelah seluruh element & script termuat
+        window.onload = function() {
+            tampilkanDaftarVideo();
+            // Beri delay sedikit 300ms agar script adblocker browser merespon duluan
+            setTimeout(checkAdBlock, 300);
+        };
     </script>
 </body>
 </html>
