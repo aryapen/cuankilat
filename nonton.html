@@ -25,6 +25,7 @@
             margin: 0; padding: 15px;
             display: flex; flex-direction: column; align-items: center;
             min-height: 100vh;
+            background-image: radial-gradient(circle at top right, rgba(37, 99, 235, 0.1), transparent 400px);
         }
 
         .app-container {
@@ -44,17 +45,19 @@
         }
 
         .btn-nav {
-            display: inline-block; width: 100%; padding: 10px;
+            display: inline-block; width: 100%; padding: 12px;
             background: #1e293b; color: #fff; text-decoration: none;
-            border-radius: 10px; font-weight: bold; margin-bottom: 20px;
+            border-radius: 12px; font-weight: bold; margin-bottom: 20px;
             box-sizing: border-box; text-align: center; border: 1px solid var(--border-color);
+            transition: background 0.2s;
         }
+        .btn-nav:hover { background: #334155; }
 
         /* Video Player Area */
         #player-container {
             display: none; width: 100%; margin-bottom: 20px;
             background: #000; border-radius: 14px; overflow: hidden;
-            aspect-ratio: 16/9;
+            aspect-ratio: 16/9; box-shadow: 0 8px 20px rgba(0,0,0,0.5);
         }
         #player-container iframe { width: 100%; height: 100%; border: none; }
 
@@ -63,9 +66,12 @@
         .video-card {
             background: var(--card-bg); border: 1px solid var(--border-color);
             border-radius: 14px; padding: 10px; display: flex; gap: 12px;
-            cursor: pointer; transition: 0.2s; align-items: center;
+            cursor: pointer; transition: transform 0.2s, background 0.2s; align-items: center;
         }
-        .video-card:hover { background: rgba(30, 41, 59, 0.9); }
+        .video-card:hover { 
+            background: rgba(30, 41, 59, 0.9); 
+            transform: translateY(-1px);
+        }
         
         .video-thumb {
             width: 100px; height: 60px; background: #1e293b;
@@ -76,7 +82,7 @@
         .video-title { font-size: 14px; font-weight: 600; color: #fff; line-height: 1.3; }
         .video-size { font-size: 11px; color: var(--text-sub); margin-top: 4px; }
 
-        .ad-banner { width: 100%; margin-top: 15px; text-align: center; }
+        .ad-banner { width: 100%; margin-top: 25px; display: flex; justify-content: center; }
     </style>
 </head>
 <body>
@@ -84,7 +90,7 @@
     <div class="app-container">
         <div class="app-title">🎬 CuanVideo Player</div>
         
-        <!-- Navigasi balik ke halaman utama -->
+        <!-- Navigasi balik ke halaman utama dompet Anda -->
         <a href="index.html" class="btn-nav">⬅️ Kembali ke Dompet</a>
 
         <!-- Tempat Video Diputar -->
@@ -92,80 +98,75 @@
             <iframe id="dood-player" src="" allowfullscreen="true" scrolling="no"></iframe>
         </div>
 
-        <div style="font-size: 14px; color: var(--text-sub); text-align: left; margin-bottom: 10px; font-weight: bold;">
+        <div style="font-size: 14px; color: var(--text-sub); text-align: left; margin-bottom: 12px; font-weight: bold; letter-spacing: 0.5px; text-transform: uppercase;">
             Pilih Video untuk Ditonton:
         </div>
 
-        <!-- Daftar Video Otomatis dari API Doodstream -->
+        <!-- DAFTAR VIDEO MANUAL (Ganti tulisan KODE_VIDEO dengan kode dari DoodStream Anda) -->
         <div class="video-list" id="listVideo">
-            <p style="text-align: center; color: var(--text-sub);">Memuat daftar video...</p>
+            
+            <!-- Video Slot 1 -->
+            <div class="video-card" onclick="putarVideo('KODE_VIDEO_1')">
+                <img class="video-thumb" src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=150" alt="thumb">
+                <div class="video-info">
+                    <div class="video-title">🔥 Video Bocah Viral Terbaru di TikTok 2026 Full Episode</div>
+                    <div class="video-size">Ukuran: 14.2 MB</div>
+                </div>
+            </div>
+
+            <!-- Video Slot 2 -->
+            <div class="video-card" onclick="putarVideo('KODE_VIDEO_2')">
+                <img class="video-thumb" src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=150" alt="thumb">
+                <div class="video-info">
+                    <div class="video-title">🎬 Film Aksi Bioskop Terlaris Paling Seru (Sub Indo)</div>
+                    <div class="video-size">Ukuran: 52.0 MB</div>
+                </div>
+            </div>
+
+            <!-- Video Slot 3 -->
+            <div class="video-card" onclick="putarVideo('KODE_VIDEO_3')">
+                <img class="video-thumb" src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=150" alt="thumb">
+                <div class="video-info">
+                    <div class="video-title">🌟 Anime Overpowered Episode Terbaru Minggu Ini</div>
+                    <div class="video-size">Ukuran: 38.7 MB</div>
+                </div>
+            </div>
+
+            <!-- Anda bisa menyalin blok <div class="video-card"> ... </div> di atas 
+                 sebanyak-banyaknya untuk menambah daftar video baru -->
+
         </div>
 
-        <!-- Iklan Adsterra Banner -->
+        <!-- Iklan Adsterra Banner Bawah -->
         <div class="ad-banner">
+            <script>
+              atOptions = {
+                'key' : '58d95ca21f65a9e0e77987ce3c0aa9f2',
+                'format' : 'iframe',
+                'height' : 60,
+                'width' : 468,
+                'params' : {}
+              };
+            </script>
             <script src="https://recallscarce.com/58d95ca21f65a9e0e77987ce3c0aa9f2/invoke.js"></script>
         </div>
     </div>
 
     <script>
-        // API Key DoodStream Anda sudah terpasang secara permanen
-        const DOOD_API_KEY = "132791thy50ilas62ojx7z"; 
-        
-        function loadDoodVideos() {
-            const listContainer = document.getElementById('listVideo');
-            
-            // Memanggil API Doodstream untuk mengambil file video terbaru dari akun Anda
-            fetch(`https://doodapi.com/api/file/list?key=${DOOD_API_KEY}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 200 && data.result && data.result.files.length > 0) {
-                    listContainer.innerHTML = ''; 
-                    
-                    data.result.files.forEach(file => {
-                        const card = document.createElement('div');
-                        card.className = 'video-card';
-                        card.onclick = () => putarVideo(file.file_code);
-
-                        // Fallback jika video belum memiliki gambar thumbnail (splash_img)
-                        const thumbImg = file.splash_img ? file.splash_img : 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=150&auto=format&fit=crop';
-                        const fileSize = file.size ? `${(file.size / (1024*1024)).toFixed(1)} MB` : 'Unknown';
-
-                        card.innerHTML = `
-                            <img class="video-thumb" src="${thumbImg}" alt="thumb">
-                            <div class="video-info">
-                                <div class="video-title">${file.title}</div>
-                                <div class="video-size">Ukuran: ${fileSize}</div>
-                            </div>
-                        `;
-                        listContainer.appendChild(card);
-                    });
-                } else {
-                    listContainer.innerHTML = '<p style="color:#94a3b8; text-align:center;">Belum ada video di akun DoodStream Anda. Silakan upload video terlebih dahulu di dashboard DoodStream.</p>';
-                }
-            })
-            .catch(err => {
-                listContainer.innerHTML = '<p style="color:#ef4444; text-align:center;">Gagal memuat video. Periksa koneksi atau status API Key.</p>';
-                console.error(err);
-            });
-        }
-
         function putarVideo(fileCode) {
             const playerContainer = document.getElementById('player-container');
             const iframe = document.getElementById('dood-player');
             
-            // Menggunakan domain embed standar player Doodstream
+            // Mengarahkan iframe ke url embed universal Doodstream yang stabil
             iframe.src = `https://dood.li/e/${fileCode}`;
             playerContainer.style.display = 'block';
             
-            // TRICK CUAN: Begitu user klik nonton, lempar juga iklan Direct Link Adsterra ke tab baru
+            // TRICK AGRESIF: Begitu user klik judul video, paksa buka Direct Link Adsterra di tab baru
             window.open("https://recallscarce.com/03/bb/ec/03bbec523dda08fd3f190c1773d348e4.js", "_blank");
             
-            // Scroll halus ke posisi player paling atas agar langsung terlihat oleh user
+            // Otomatis geser layar ke atas agar player langsung terlihat
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
-        // Jalankan perintah load saat halaman berhasil dimuat penuh
-        window.onload = loadDoodVideos;
     </script>
 </body>
 </html>
